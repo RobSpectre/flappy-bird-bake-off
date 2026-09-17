@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="color-scheme" content="dark light">
+<title>Flappy Bird</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- The stage is laid out at the logical 288x512 resolution and scaled as a
+     whole by a CSS transform, so the canvas and the DOM overlays on top of it
+     always stay in register with each other. -->
+<div id="shell">
+  <div id="stage">
+    <canvas id="game" width="288" height="512" aria-label="Flappy Bird game board"></canvas>
+
+    <!-- Inline SVG rather than a sprite: still zero files to load, but far
+         more predictable than faking a speaker cone out of CSS borders. -->
+    <button id="mute" type="button" aria-label="Mute sound" aria-pressed="false">
+      <svg class="ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <path class="ico-body" d="M3 8h3l4-3.5v11L6 12H3z"/>
+        <path class="ico-wave ico-wave-1" d="M12.6 7.4a3.6 3.6 0 0 1 0 5.2"/>
+        <path class="ico-wave ico-wave-2" d="M15 5.2a6.8 6.8 0 0 1 0 9.6"/>
+        <line class="ico-slash" x1="3.4" y1="16.6" x2="16.6" y2="3.4"/>
+      </svg>
+    </button>
+
+    <!-- Ready / title screen -->
+    <div id="ready" class="overlay">
+      <h1 class="title">Flappy<br>Bird</h1>
+      <p class="hint">Fly through the pipes. Don&rsquo;t hit anything.</p>
+      <div class="tap">
+        <span class="tap-hand" aria-hidden="true"></span>
+        <p>Tap, click or press <kbd>Space</kbd></p>
+      </div>
+    </div>
+
+    <!-- Game over score card -->
+    <div id="over" class="overlay is-hidden" aria-hidden="true">
+      <h2 class="gameover">Game Over</h2>
+      <div class="card">
+        <div class="medal-slot">
+          <div id="medal" class="medal" data-tier="none" aria-hidden="true"></div>
+          <span id="medal-label" class="medal-label">No medal</span>
+        </div>
+        <dl class="scores">
+          <div class="row">
+            <dt>Score</dt>
+            <dd id="final-score">0</dd>
+          </div>
+          <div class="row">
+            <dt>Best</dt>
+            <dd id="final-best">0<span id="new-badge" class="badge is-hidden">New!</span></dd>
+          </div>
+        </dl>
+      </div>
+      <button id="restart" type="button" class="btn">Play again</button>
+      <p class="hint">or press <kbd>R</kbd></p>
+    </div>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

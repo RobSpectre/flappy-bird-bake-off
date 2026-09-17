@@ -1,0 +1,5 @@
+# Local-only benchmark artefacts and agent scratch dirs — not part of the games.
+.agents/
+.codex/
+bench/logs/
+.DS_Store

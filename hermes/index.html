@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Flappy Bird</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="shell">
+  <canvas id="game" width="288" height="512" aria-label="Flappy Bird play area"></canvas>
+
+  <div id="ui">
+    <!-- Title screen -->
+    <div id="title-screen" class="screen">
+      <h1 class="logo">FLAPPY<span>BIRD</span></h1>
+      <p class="hint">Tap, click or press <kbd>Space</kbd> to flap</p>
+      <p class="best-line">Best <b id="title-best">0</b></p>
+      <button id="start-btn" class="btn" type="button">Play</button>
+    </div>
+
+    <!-- Game over card -->
+    <div id="over-screen" class="screen hidden">
+      <div class="card">
+        <h2 class="card-title">Game Over</h2>
+        <div class="medal-row">
+          <div id="medal" class="medal none" aria-hidden="true"></div>
+          <div class="scores">
+            <div class="score-row"><span>Score</span><b id="final-score">0</b></div>
+            <div class="score-row"><span>Best</span><b id="final-best">0</b></div>
+          </div>
+        </div>
+        <p id="new-best" class="new-best hidden">New best!</p>
+        <button id="restart-btn" class="btn" type="button">Play again</button>
+        <p class="hint small">or press <kbd>R</kbd></p>
+      </div>
+    </div>
+
+    <!-- Mute toggle -->
+    <button id="mute-btn" class="icon-btn" type="button" aria-label="Mute sound">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path class="spk" d="M4 9h3l4-3v12l-4-3H4z"/>
+        <path class="wave" d="M14.5 8.5a5 5 0 0 1 0 7"/>
+        <path class="wave" d="M17 6a8.5 8.5 0 0 1 0 12"/>
+        <path class="slash" d="M5 5l14 14"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

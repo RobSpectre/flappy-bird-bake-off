@@ -1,0 +1,429 @@
+/* ------------------------------------------------------------------
+   Flappy Bird — shell, overlay and button styling.
+
+   Everything inside #stage is authored at the game's logical resolution
+   (288 x 512 px). game.js measures the window and sets --scale, and the
+   single transform on #stage blows the whole thing up to fit. That keeps
+   the DOM overlays pixel-aligned with the canvas art at any window size.
+   ------------------------------------------------------------------ */
+
+:root {
+  --stage-w: 288px;
+  --stage-h: 512px;
+  --scale: 1;
+
+  /* Palette sampled to match the procedurally drawn canvas art. */
+  --ink: #3b2a1c;
+  --ink-soft: #6b5442;
+  --paper: #ded895;
+  --paper-edge: #b4ad6e;
+  --sky: #4ec0ca;
+  --leaf: #5aab3a;
+  --leaf-dark: #3d7d24;
+  --white: #fdfdf6;
+  --shadow: rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #121a1f;
+  /* A faint vignette of the sky colour so the letterboxing isn't dead flat. */
+  background-image: radial-gradient(
+    120% 90% at 50% 0%,
+    #1d3b45 0%,
+    #121a1f 60%
+  );
+  color: var(--white);
+  font-family: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+#shell {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+#stage {
+  position: relative;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  transform: scale(var(--scale));
+  transform-origin: center center;
+  /* The canvas paints its own sky, so this only shows during first paint. */
+  background: var(--sky);
+  box-shadow: 0 18px 50px -12px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+#game {
+  display: block;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  /* Art is drawn at 1:1 and upscaled, so keep the edges crisp. */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ---------------------------------- overlays ---------------------------- */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 20px 76px; /* optically centre in the 400px playfield */
+  text-align: center;
+  /* Clicks fall through to the canvas; only real buttons opt back in. */
+  pointer-events: none;
+  animation: fade-in 180ms ease-out both;
+}
+
+.overlay.is-hidden {
+  display: none;
+}
+
+/* The title screen anchors its text to the top and its prompt to the
+   bottom, leaving the middle band clear for the bobbing bird. */
+#ready {
+  justify-content: flex-start;
+  padding-top: 54px;
+  padding-bottom: 122px; /* keep the prompt clear of the ground strip */
+  gap: 10px;
+}
+
+#ready .tap {
+  margin-top: auto;
+}
+
+.overlay button {
+  pointer-events: auto;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* Chunky arcade lettering, faked with a hard offset shadow and a stroke
+   rather than a downloaded pixel font. */
+.title,
+.gameover {
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-shadow: 2px 0 var(--ink), -2px 0 var(--ink), 0 2px var(--ink),
+    0 -2px var(--ink), 3px 4px 0 var(--shadow);
+}
+
+.title {
+  font-size: 44px;
+  margin-bottom: 4px;
+}
+
+.gameover {
+  font-size: 30px;
+  color: #f8a01c;
+}
+
+.tap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: bob 1.1s ease-in-out infinite;
+}
+
+.tap p {
+  font-size: 12px;
+  font-weight: 700;
+  text-shadow: 0 1px 0 var(--ink), 0 2px 3px var(--shadow);
+}
+
+/* A little pointing hand, drawn with borders so there's no image file. */
+.tap-hand {
+  position: relative;
+  width: 18px;
+  height: 22px;
+  border-radius: 9px 9px 7px 7px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.12);
+}
+
+.tap-hand::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -7px;
+  width: 8px;
+  height: 10px;
+  margin-left: -4px;
+  border-radius: 4px 4px 0 0;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-bottom: 0;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.hint {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(253, 253, 246, 0.82);
+  text-shadow: 0 1px 2px var(--shadow);
+}
+
+kbd {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(253, 253, 246, 0.35);
+  font: inherit;
+  font-size: 0.92em;
+}
+
+/* --------------------------------- score card -------------------------- */
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 218px;
+  padding: 12px 14px;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  background: linear-gradient(var(--paper), var(--paper-edge));
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.28), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+  color: var(--ink);
+  text-align: left;
+}
+
+.medal-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+}
+
+.medal {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #cdc7a4;
+  border: 3px solid rgba(0, 0, 0, 0.22);
+  box-shadow: inset 0 -4px 6px rgba(0, 0, 0, 0.22),
+    inset 0 4px 6px rgba(255, 255, 255, 0.45);
+}
+
+/* Each tier is a two-tone radial sheen — no sprite sheet required. */
+.medal[data-tier="bronze"] {
+  background: radial-gradient(circle at 34% 28%, #f0b57a, #a8571f 70%);
+}
+
+.medal[data-tier="silver"] {
+  background: radial-gradient(circle at 34% 28%, #f6f8fb, #8d9aa8 70%);
+}
+
+.medal[data-tier="gold"] {
+  background: radial-gradient(circle at 34% 28%, #fff3a8, #d79a10 70%);
+}
+
+.medal[data-tier="platinum"] {
+  background: radial-gradient(circle at 34% 28%, #f2fbff, #7fd4e8 62%, #4aa3bd);
+  box-shadow: inset 0 -4px 6px rgba(0, 0, 0, 0.18),
+    inset 0 4px 6px rgba(255, 255, 255, 0.7), 0 0 10px rgba(122, 222, 246, 0.6);
+}
+
+.medal-label {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.scores {
+  flex: 1 1 auto;
+}
+
+.scores .row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.scores .row + .row {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 2px solid rgba(59, 42, 28, 0.18);
+}
+
+.scores dt {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.scores dd {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.badge {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: #e8483c;
+  color: var(--white);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: 3px;
+}
+
+.badge.is-hidden {
+  display: none;
+}
+
+/* ---------------------------------- buttons ---------------------------- */
+
+.btn {
+  padding: 9px 20px 11px;
+  border: 3px solid var(--ink);
+  border-radius: 7px;
+  background: linear-gradient(var(--leaf), var(--leaf-dark));
+  box-shadow: 0 4px 0 #2d5c1a, inset 0 2px 0 rgba(255, 255, 255, 0.38);
+  color: var(--white);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 60ms ease, box-shadow 60ms ease;
+}
+
+.btn:hover {
+  filter: brightness(1.07);
+}
+
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #2d5c1a, inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+#mute {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: rgba(253, 253, 246, 0.82);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+#mute:hover {
+  background: var(--white);
+}
+
+#mute .ico {
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+}
+
+#mute .ico-body {
+  fill: var(--ink);
+}
+
+#mute .ico-wave {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  transition: opacity 90ms ease;
+}
+
+/* Muted: the cone waves drop away and a red slash appears. */
+#mute .ico-slash {
+  stroke: #e8483c;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  opacity: 0;
+  transition: opacity 90ms ease;
+}
+
+#mute[aria-pressed="true"] .ico-wave {
+  opacity: 0;
+}
+
+#mute[aria-pressed="true"] .ico-body {
+  fill: var(--ink-soft);
+}
+
+#mute[aria-pressed="true"] .ico-slash {
+  opacity: 1;
+}
+
+:focus-visible {
+  outline: 3px solid #ffd54a;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .tap {
+    animation: none;
+  }
+}

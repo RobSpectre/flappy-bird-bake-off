@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#09171d">
+  <title>Skyline Flap — an arcade flight loop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page-shell">
+    <header class="topbar">
+      <a class="wordmark" href="#game" aria-label="Skyline Flap home">
+        <span class="wordmark-mark" aria-hidden="true">✦</span>
+        <span>Skyline Flap</span>
+      </a>
+      <div class="topbar-note"><span class="signal-dot"></span> Flight loop online</div>
+    </header>
+
+    <section class="layout" aria-label="Skyline Flap game">
+      <aside class="intro-panel">
+        <p class="eyebrow">Arcade / 01</p>
+        <h1>Stay up.<br><em>Chase the skyline.</em></h1>
+        <p class="lede">A one-button flight loop with a mean little learning curve. Thread the gaps, bank the points, and make the next run cleaner.</p>
+
+        <div class="flight-log" aria-label="Flight log">
+          <div class="log-heading">
+            <span>Flight log</span>
+            <span class="log-live">LIVE</span>
+          </div>
+          <div class="log-row">
+            <span>Best distance</span>
+            <strong id="panel-best">000</strong>
+          </div>
+          <div class="log-row">
+            <span>Current run</span>
+            <strong id="panel-score">000</strong>
+          </div>
+          <div class="log-meter" aria-hidden="true"><span id="progress-meter"></span></div>
+        </div>
+
+        <div class="how-to">
+          <p class="eyebrow">Pilot notes</p>
+          <div class="note-row"><span class="keycap">SPACE</span><span>flap upward</span></div>
+          <div class="note-row"><span class="keycap">TAP</span><span>same move, touch screen</span></div>
+          <div class="note-row"><span class="keycap">R</span><span>reset a run</span></div>
+        </div>
+
+        <p class="tiny-copy">The sky gets quicker as you go. The gap does not forgive autopilot.</p>
+      </aside>
+
+      <section class="game-column" id="game">
+        <div class="game-label"><span>SKY-07</span><span>DAWN SHIFT</span></div>
+        <div class="game-wrap" id="game-wrap">
+          <div class="fallback-scene" id="fallback-scene" aria-hidden="true">
+            <div class="fallback-sun"></div>
+            <div class="fallback-cloud fallback-cloud-one"></div>
+            <div class="fallback-cloud fallback-cloud-two"></div>
+            <div class="fallback-horizon"></div>
+            <div class="fallback-pipe fallback-pipe-top"></div>
+            <div class="fallback-pipe fallback-pipe-bottom"></div>
+            <div class="fallback-bird"></div>
+            <div class="fallback-ground"></div>
+          </div>
+          <canvas id="game" width="360" height="640" aria-label="Skyline Flap play area"></canvas>
+
+          <div class="game-ui" id="game-ui">
+            <button id="sound-btn" class="sound-btn" type="button" aria-label="Mute sound">
+              <span class="sound-icon" aria-hidden="true"><span></span><i></i><b></b></span>
+              <span id="sound-text">Sound on</span>
+            </button>
+
+            <div id="title-screen" class="screen screen-title">
+              <div class="title-stamp">FIELD TEST<br><span>READY</span></div>
+              <p class="game-kicker">A tiny flight loop</p>
+              <h2>SKYLINE<br><span>FLAP</span></h2>
+              <p class="screen-hint">Tap, click, or press <kbd>Space</kbd><br>to lift off</p>
+              <button id="start-btn" class="primary-btn" type="button">Start flying <span aria-hidden="true">↗</span></button>
+            </div>
+
+            <div id="over-screen" class="screen screen-over hidden">
+              <div class="over-card">
+                <p class="game-kicker">Flight complete</p>
+                <h2>Good run.<br><span>Again?</span></h2>
+                <div class="score-card">
+                  <div><span>Distance</span><strong id="final-score">000</strong></div>
+                  <div><span>Best</span><strong id="final-best">000</strong></div>
+                </div>
+                <p id="new-best" class="new-best hidden">✦ New best distance</p>
+                <button id="restart-btn" class="primary-btn" type="button">Fly again <span aria-hidden="true">↗</span></button>
+                <p class="screen-hint compact">or press <kbd>R</kbd></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="game-footer"><span>Best of luck, pilot.</span><span>Local score saved</span></div>
+      </section>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
