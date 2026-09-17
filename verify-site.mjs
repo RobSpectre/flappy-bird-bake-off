@@ -76,7 +76,7 @@ for (const want of [['CLAUDE', 'claude/index.html'], ['CODEX', 'codex/index.html
 check('landing: no horizontal overflow at 1280', await evalIn('document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1'));
 
 // The three cards must line up: same bar height, same play-area top, same button top, same card height.
-for (const w of [1360, 1180, 1100, 960]) {
+for (const w of [1360, 1180, 1100, 1040]) {
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: 1200, deviceScaleFactor: 1, mobile: false });
   await sleep(500);
   const align = await evalIn(`(() => {
@@ -87,6 +87,22 @@ for (const w of [1360, 1180, 1100, 960]) {
   })()`);
   check(`landing: cards line up at ${w}px (stages, buttons and heights within 1px)`, align.spread <= 3, JSON.stringify(align));
 }
+// Regression guard for the embedding case: in a frame narrow enough to stack the cards
+// (<=1000px), every preview must still have loaded, even the ones below the frame's fold.
+// With loading="lazy" those two sit blank forever, which is what an OBS browser source sized
+// 900x700 or a narrow blog iframe sees.
+await send('Emulation.setDeviceMetricsOverride', { width: 960, height: 700, deviceScaleFactor: 1, mobile: false });
+await sleep(2500);
+const stacked = await evalIn(`[...document.querySelectorAll('.card iframe')].map((f) => {
+  const d = f.contentDocument;
+  const cv = d && d.querySelector('canvas');
+  const r = f.getBoundingClientRect();
+  return { entry: f.dataset.entry, offscreenInFrame: r.top > window.innerHeight, loaded: !!cv, canvas: cv ? cv.width + 'x' + cv.height : null };
+})`);
+check('landing: all three previews load in a 960x700 frame, including the off-screen ones',
+  stacked.length === 3 && stacked.every((s) => s.loaded),
+  JSON.stringify(stacked));
+console.log('    off-screen previews: ' + stacked.filter((s) => s.offscreenInFrame).map((s) => s.entry + ':loaded=' + s.loaded).join(' ') || '    (none off-screen)');
 await send('Emulation.clearDeviceMetricsOverride');
 await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false });
 await sleep(400);

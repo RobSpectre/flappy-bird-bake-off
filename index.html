@@ -32,7 +32,9 @@
   .masthead a { color: var(--claude); }
 
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 44px; align-items: stretch; }
-  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  /* Three columns only when a 288px stage genuinely fits in each card
+     (3 x 296 card + 2 x 30 gap + 44 page padding = 992). */
+  @media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
 
   .card { border: 4px solid var(--ink); background: #fffdf7; box-shadow: var(--shadow); display: flex; flex-direction: column; }
   /* Fixed bar height: a subtitle that wraps at one width must not push that card's
@@ -85,7 +87,7 @@
         <p class="sub">Flappy Bird — faithful, deeply tuned</p>
       </div>
       <div class="stage">
-        <iframe src="claude/index.html" data-entry="claude" title="Claude's Flappy Bird" loading="lazy" allow="autoplay"></iframe>
+        <iframe src="claude/index.html" data-entry="claude" title="Claude's Flappy Bird" allow="autoplay"></iframe>
       </div>
       <div class="body">
         <ul class="stats">
@@ -108,7 +110,7 @@
         <p class="sub">Skyline Flap — dusk arcade art</p>
       </div>
       <div class="stage">
-        <iframe src="codex/index.html" data-entry="codex" title="Codex's Skyline Flap" loading="lazy" allow="autoplay"></iframe>
+        <iframe src="codex/index.html" data-entry="codex" title="Codex's Skyline Flap" allow="autoplay"></iframe>
       </div>
       <div class="body">
         <ul class="stats">
@@ -131,7 +133,7 @@
         <p class="sub">Flappy Bird — medals and headless proof</p>
       </div>
       <div class="stage">
-        <iframe src="hermes/index.html" data-entry="hermes" title="Hermes' Flappy Bird" loading="lazy" allow="autoplay"></iframe>
+        <iframe src="hermes/index.html" data-entry="hermes" title="Hermes' Flappy Bird" allow="autoplay"></iframe>
       </div>
       <div class="body">
         <ul class="stats">
@@ -168,6 +170,10 @@
   // their 288x512 canvas in the viewport, so those frames need nothing doing to them.
   // Skyline Flap puts its masthead above the play area, so its frame is nudged down to
   // frame the game instead of the wordmark. Cross-origin frames (file://) are left alone.
+  //
+  // The frames are deliberately NOT loading="lazy": when this page is itself embedded in
+  // someone else's iframe (a narrower one stacks the cards into a column), the previews
+  // below the frame's own fold would never load and would sit blank until scrolled to.
   const FRAME_OFFSET = { codex: 104 };
   document.querySelectorAll('.card iframe').forEach((frame) => {
     const offset = FRAME_OFFSET[frame.dataset.entry];
