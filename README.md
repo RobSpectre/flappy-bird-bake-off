@@ -4,12 +4,16 @@ One written spec, three coding agents, three independent clones of Flappy Bird.
 Each entry is a self-contained folder that runs straight from `file://` — no
 server, no build step, no dependencies.
 
-**Live: https://robspectre.github.io/flappy-bird-bake-off/**
+**Live: [robspectre.github.io/flappy-bird-bake-off](https://robspectre.github.io/flappy-bird-bake-off/)** —
+the landing page plays all three side by side; the entries are at
+[/claude/](https://robspectre.github.io/flappy-bird-bake-off/claude/),
+[/codex/](https://robspectre.github.io/flappy-bird-bake-off/codex/) and
+[/hermes/](https://robspectre.github.io/flappy-bird-bake-off/hermes/).
 
 | Entry | Folder | Look | Lines |
 | ----- | ------ | ---- | ----- |
 | Claude Code | [`claude/`](claude/) | faithful to the original: daytime palette, smoothstep difficulty ramp | 1,494 |
-| OpenAI Codex | [`codex/`](codex/) | **Skyline Flap** — original dusk arcade treatment | 905 |
+| OpenAI Codex | [`codex/`](codex/) | **Skyline Flap** — dusk arcade treatment | 905 |
 | Hermes | [`hermes/`](hermes/) | original palette plus medal tiers and a CDP test harness | 918 |
 
 The landing page at the repo root embeds all three in `<iframe>`s, so you can
