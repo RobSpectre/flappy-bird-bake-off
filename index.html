@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flappy Bird Bake-Off — three coding agents, one prompt</title>
+<meta name="description" content="The same one-line prompt given to three coding agents. Three playable Flappy Bird clones, side by side.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🐦</text></svg>">
+<style>
+  :root {
+    --bg: #0b141b;
+    --panel: #132029;
+    --panel-2: #17262f;
+    --line: rgba(255, 255, 255, .09);
+    --ink: #e8f1f6;
+    --muted: #8ba3b2;
+    --accent: #6fd3c7;
+    --accent-2: #ffc86b;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: radial-gradient(120% 60% at 50% -10%, #16303a, var(--bg) 60%);
+    color: var(--ink);
+    font: 16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { width: min(1200px, 92vw); margin: 0 auto; }
+
+  header.hero { padding: clamp(48px, 9vh, 104px) 0 40px; }
+  .kicker {
+    font: 600 11px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--accent);
+    margin: 0 0 20px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(38px, 6.4vw, 76px);
+    line-height: .98;
+    letter-spacing: -.035em;
+    font-weight: 700;
+  }
+  h1 em { font-style: normal; color: var(--accent-2); }
+  .lede { color: var(--muted); max-width: 62ch; margin: 22px 0 0; font-size: clamp(15px, 1.4vw, 18px); }
+  .prompt {
+    margin: 30px 0 0;
+    padding: 16px 18px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    font: 13px/1.6 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color: #cbe0e8;
+    max-width: 78ch;
+  }
+  .prompt b { color: var(--muted); font-weight: 600; }
+
+  main { padding-bottom: 72px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 22px;
+    margin-top: 44px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .card-head { padding: 18px 20px 14px; border-bottom: 1px solid var(--line); }
+  .card-head h2 { margin: 0; font-size: 21px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
+  .card-head h2 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+  .card.claude-code h2 .dot { background: #d9925f; }
+  .card.codex h2 .dot { background: #ff8a75; }
+  .card-head p { margin: 8px 0 0; color: var(--muted); font-size: 13.5px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; }
+  .tag {
+    font: 500 10.5px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: #9fb6c2; border: 1px solid var(--line); border-radius: 999px;
+    padding: 5px 9px; background: var(--panel-2);
+  }
+  .stage {
+    position: relative;
+    height: min(62vh, 560px);
+    background: var(--panel-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .card.codex .stage { height: min(62vh, 560px); }
+  .stage iframe { width: 100%; height: 100%; border: 0; display: block; background: #000; }
+  .placeholder { text-align: center; padding: 24px; }
+  .placeholder p { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+  .card-foot {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 20px; border-top: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .btn {
+    font: 600 12px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    letter-spacing: .07em; text-transform: uppercase;
+    padding: 11px 14px; border-radius: 6px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--ink);
+    text-decoration: none; display: inline-block;
+  }
+  .btn:hover { border-color: rgba(255, 255, 255, .25); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #08201d; }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .foot-note { color: var(--muted); font-size: 12px; margin-left: auto; }
+
+  section.how { margin-top: 64px; border-top: 1px solid var(--line); padding-top: 34px; }
+  section.how h2 { font-size: 22px; margin: 0 0 6px; }
+  section.how p { color: var(--muted); max-width: 74ch; margin: 0 0 22px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; }
+  td code, .mono { font: 12.5px ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: #cbe0e8; }
+  footer { border-top: 1px solid var(--line); padding: 26px 0 40px; color: var(--muted); font-size: 13px; }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="kicker">Bake-off · September 2026</p>
+    <h1>One prompt.<br>Three coding agents.<br><em>Three Flappy Birds.</em></h1>
+    <p class="lede">
+      Each agent was given the same one-line brief, in its own directory, with no shared code
+      and no further guidance. All three are plain HTML/CSS/JavaScript with no dependencies,
+      served straight from this GitHub Pages site.
+    </p>
+    <p class="prompt"><b>The brief:</b> “Create a web based clone of flappy bird in a subdirectory with your coding agent name as the name of the folder. open a web browser when you are done.”</p>
+  </header>
+
+  <main>
+    <div class="grid">
+
+      <div class="card hermes" id="card-hermes">
+        <div class="card-head">
+          <h2><span class="dot"></span>Hermes Agent</h2>
+          <p>Hand-rolled canvas game. Fixed 1/120&nbsp;s timestep so play is identical on any refresh rate, circle-vs-rect collision, fully procedural art and WebAudio sound.</p>
+          <div class="tags">
+            <span class="tag">Canvas 2D</span>
+            <span class="tag">Fixed timestep</span>
+            <span class="tag">Procedural art</span>
+            <span class="tag">localStorage best</span>
+          </div>
+        </div>
+        <div class="stage" data-src="hermes/" data-title="Hermes Agent">
+          <div class="placeholder">
+            <p>Nothing loads until you ask — three live games won't burn your battery.</p>
+            <button class="btn primary" type="button" data-load>Load the game</button>
+          </div>
+        </div>
+        <div class="card-foot">
+          <a class="btn" href="hermes/">Open full page ↗</a>
+          <span class="foot-note">Space / click / tap · R restarts</span>
+        </div>
+      </div>
+
+      <div class="card claude-code" id="card-claude-code">
+        <div class="card-head">
+          <h2><span class="dot"></span>Claude Code</h2>
+          <p>Chunky retro portrait frame with a beveled pipe look, cloud parallax and a scroll-locked stage. Adds pause and mute on top of the usual flap control.</p>
+          <div class="tags">
+            <span class="tag">Canvas 2D</span>
+            <span class="tag">Mute / pause</span>
+            <span class="tag">Retro frame</span>
+          </div>
+        </div>
+        <div class="stage" data-src="claude-code/" data-title="Claude Code">
+          <div class="placeholder">
+            <p>Nothing loads until you ask — three live games won't burn your battery.</p>
+            <button class="btn primary" type="button" data-load>Load the game</button>
+          </div>
+        </div>
+        <div class="card-foot">
+          <a class="btn" href="claude-code/">Open full page ↗</a>
+          <span class="foot-note">Space / click / tap · M mutes · P pauses</span>
+        </div>
+      </div>
+
+      <div class="card codex" id="card-codex">
+        <div class="card-head">
+          <h2><span class="dot"></span>OpenAI Codex CLI</h2>
+          <p>A full arcade landing page rather than a bare game: hero copy, live best-score and pipes-cleared stats, and a start-run overlay around the canvas.</p>
+          <div class="tags">
+            <span class="tag">Canvas 2D</span>
+            <span class="tag">Landing page</span>
+            <span class="tag">Live stats</span>
+            <span class="tag">Start overlay</span>
+          </div>
+        </div>
+        <div class="stage" data-src="codex/" data-title="OpenAI Codex CLI">
+          <div class="placeholder">
+            <p>Nothing loads until you ask — three live games won't burn your battery.</p>
+            <button class="btn primary" type="button" data-load>Load the game</button>
+          </div>
+        </div>
+        <div class="card-foot">
+          <a class="btn" href="codex/">Open full page ↗</a>
+          <span class="foot-note">Click START RUN, then space / tap</span>
+        </div>
+      </div>
+
+    </div>
+
+    <section class="how">
+      <h2>Repo layout</h2>
+      <p>
+        Each version is self-contained and served from its own directory, so GitHub Pages
+        serves them unmodified — no build step, no bundler, no dependencies.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Path</th><th>Agent</th><th>Files</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono">/hermes/</td><td>Hermes Agent</td><td class="mono">index.html · css/ · js/ · README.md</td><td>Fixed 1/120&nbsp;s timestep, muted-procedural audio, best score in localStorage</td></tr>
+          <tr><td class="mono">/claude-code/</td><td>Claude Code</td><td class="mono">index.html · style.css · game.js · README.md</td><td>Pause (P) and mute (M) keys, portrait frame, cloud parallax</td></tr>
+          <tr><td class="mono">/codex/</td><td>OpenAI Codex CLI</td><td class="mono">index.html · style.css · game.js</td><td>Full landing page wrapper with live stats and a start overlay</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    Every version was smoke-tested in headless Chrome before publishing — each page loads with no
+    JavaScript errors and its canvas animates. Source: see the repository README.
+  </footer>
+
+</div>
+
+<script>
+  // Load a game into its card only on demand: keeps the landing page light and
+  // avoids running three animation loops at once.
+  document.querySelectorAll('.stage').forEach(function (stage) {
+    var btn = stage.querySelector('[data-load]');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var frame = document.createElement('iframe');
+      frame.src = stage.dataset.src;
+      frame.title = stage.dataset.title;
+      frame.loading = 'eager';
+      frame.setAttribute('allow', 'autoplay');
+      stage.innerHTML = '';
+      stage.appendChild(frame);
+    });
+  });
+</script>
+</body>
+</html>

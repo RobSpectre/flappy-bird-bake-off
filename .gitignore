@@ -1,0 +1,12 @@
+# macOS / editors / tooling
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Python scratch (local test drivers / venvs)
+__pycache__/
+*.py[cod]
+.venv/
+venv/

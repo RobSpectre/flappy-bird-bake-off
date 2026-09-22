@@ -1,0 +1,65 @@
+:root {
+  --frame: #2b1f16;
+  --page-top: #3a4a5e;
+  --page-bottom: #1a2230;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background: radial-gradient(ellipse at 50% 0%, var(--page-top), var(--page-bottom) 70%);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color: #cbd5e1;
+  overflow: hidden;
+  /* Stop the browser from hijacking taps as scroll/zoom gestures. */
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  /* The stage never exceeds the viewport, so the canvas below can safely
+     size itself off the stage height without overflowing. */
+  max-height: 100%;
+  min-height: 0;
+}
+
+#game {
+  display: block;
+  /* 400:640 = 5:8. Fit to whichever axis runs out first. */
+  aspect-ratio: 5 / 8;
+  height: min(88vh, 900px);
+  max-width: 100%;
+  width: auto;
+  border-radius: 10px;
+  border: 3px solid var(--frame);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .06) inset;
+  cursor: pointer;
+}
+
+#hint {
+  font-size: 12px;
+  letter-spacing: .04em;
+  opacity: .6;
+  text-align: center;
+}
+
+@media (max-height: 560px) {
+  #hint { display: none; }
+}

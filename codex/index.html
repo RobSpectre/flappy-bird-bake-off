@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#071f37" />
+    <title>Flappy // Codex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="Flappy home">
+          <span class="brand-mark">✦</span>
+          <span>FLAPPY<span class="brand-slash">//</span>CODEX</span>
+        </a>
+        <div class="topbar-meta">
+          <span class="live-dot"></span>
+          <span>ARCADE BUILD 01</span>
+        </div>
+      </header>
+
+      <section class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">ONE BUTTON. ZERO MERCY.</p>
+          <h1>Stay in<br /><em>the air.</em></h1>
+          <p class="lede">A tiny arcade ritual for the moments when your brain needs one clean thing to do.</p>
+          <div class="controls-note">
+            <span class="keycap">SPACE</span>
+            <span>or tap to flap</span>
+          </div>
+        </div>
+
+        <div class="game-card" aria-label="Flappy bird game">
+          <div class="game-card-topline">
+            <span>RUNNING ON PURE MOMENTUM</span>
+            <span class="status-chip"><i></i> LIVE</span>
+          </div>
+          <div class="game-wrap">
+            <canvas id="game" width="420" height="620" tabindex="0" aria-label="Flappy game canvas"></canvas>
+            <div class="game-overlay" id="overlay">
+              <div class="overlay-kicker">READY WHEN YOU ARE</div>
+              <h2>FLAPPY<br /><span>DEMO</span></h2>
+              <p>Press space or tap<br />to start flying.</p>
+              <button id="startButton" class="primary-button">START RUN <span>↗</span></button>
+            </div>
+          </div>
+          <div class="game-card-footer">
+            <div><span>BEST</span><strong id="bestScore">00</strong></div>
+            <div class="footer-divider"></div>
+            <div><span>MODE</span><strong>ENDLESS</strong></div>
+            <button id="soundButton" class="icon-button" aria-label="Toggle sound" aria-pressed="true">♫</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-row" aria-label="Game stats">
+        <div class="stat-block"><span class="stat-index">01</span><span class="stat-label">CURRENT RUN</span><strong id="scoreStat">00</strong></div>
+        <div class="stat-block"><span class="stat-index">02</span><span class="stat-label">PIPES CLEARED</span><strong id="pipesStat">00</strong></div>
+        <div class="stat-block quote-stat"><span class="stat-index">03</span><span class="stat-label">FIELD NOTE</span><p>“The gap is always smaller<br />than it looks.”</p></div>
+      </section>
+
+      <footer class="footer">
+        <span>BUILT FOR SHORT ATTENTION SPANS</span>
+        <span>© CODEX ARCADE / 2026</span>
+      </footer>
+    </main>
+    <script src="./game.js"></script>
+  </body>
+</html>
